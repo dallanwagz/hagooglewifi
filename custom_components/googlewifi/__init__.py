@@ -187,11 +187,6 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
             
             if system_data is None:
                 raise ConfigEntryNotReady("Google Wifi has returned no system")
-            
-            #REMOVE ME. this is to ignore the mateus leme setup
-            _LOGGER.debug(f"What systems were returned? {system_data.keys()}")
-            foo = system_data.pop('58c22f5c-b87c-424c-bdf5-a8544ae32745')[0:100]
-            _LOGGER.warning(f"ignoring {foo}")
 
             for system_id, system in system_data.items():
                 connected_count = 0
