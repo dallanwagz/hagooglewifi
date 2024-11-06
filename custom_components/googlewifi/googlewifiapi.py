@@ -192,10 +192,16 @@ class GoogleWifi:
       payload = {}
       
       response = await self.get_api(url, headers, payload)
+      
       #REMOVE ME. this is to ignore the mateus leme setup
-      _LOGGER.debug(f"What systems were returned? {response.get("groups")}")
-      foo = response.get("groups").pop('58c22f5c-b87c-424c-bdf5-a8544ae32745')[0:100]
-      _LOGGER.warning(f"ignoring {foo}")
+      index = 0
+      for group in response['groups']:
+        _LOGGER.debug(f"Group ID is {group['id']}, index is {index}")
+        if group['id'] == '58c22f5c-b87c-424c-bdf5-a8544ae32745':
+          _LOGGER.debug(f"Removing {group['id']}")
+          del response['groups'][index]
+        index += 1
+      #REMOVE ME. this is to ignore the mateus leme setup
 
       if response.get("groups"):
         return await self.structure_systems(response)
