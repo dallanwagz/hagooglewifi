@@ -1,0 +1,72 @@
+async def structure_systems(self, system_data):
+  """Structure the data with ids in dict."""
+  systems = {}
+  
+  for this_system in system_data["groups"]:
+    systems[this_system["id"]] = this_system
+
+    system_status = await self.get_status(this_system["id"])
+    system_metrics = await self.get_realtime_metrics(this_system["id"])
+
+    try:
+      systems[this_system["id"]]["status"] = system_status["wanConnectionStatus"]
+      systems[this_system["id"]]["groupTraffic"] = system_metrics.get("groupTraffic",None)
+    except KeyError as error:
+      raise GoogleWifiException(error)
+
+    blocking_policies = {}
+    if this_system["groupSettings"].get("familyHubSettings").get("stationPolicies"):
+      for blocking_policy in this_system["groupSettings"]["familyHubSettings"]["stationPolicies"]:
+        blocking_policies[blocking_policy["stationId"]] = blocking_policy
+
+    this_status = {}
+    for this_ap in system_status["apStatuses"]:
+      this_status[this_ap["apId"]] = this_ap
+
+    system_status["status"] = this_status
+
+    access_points = {}
+    
+    try:
+      for this_ap in this_system["accessPoints"]:
+        access_points[this_ap["id"]] = this_ap
+        access_points[this_ap["id"]]["status"] = system_status["status"][this_ap["id"]]["apState"]
+    except KeyError as error:
+      raise GoogleWifiException(error)
+
+    systems[this_system["id"]]["access_points"] = access_points
+
+    devices_list = await self.get_devices(this_system["id"])
+    
+    devices = {}
+    station_ids = []
+    
+    try:
+      for this_device in devices_list["stations"]:
+        devices[this_device["id"]] = this_device
+        station_ids.append(this_device["id"])
+        device_paused = False
+
+        if blocking_policies.get(this_device["id"]):
+          expire_date = dateutil.parser.parse(blocking_policies[this_device["id"]]["blockingPolicy"]["expiryTimestamp"])
+          
+          if expire_date > datetime.datetime.now(datetime.timezone.utc) or expire_date.timestamp() == 0:
+            device_paused = True
+
+        devices[this_device["id"]]["paused"] = device_paused
+    except KeyError as error:
+      raise GoogleWifiException(error)
+
+    sensitive_info = await self.get_sensitive_info(system_id=this_system["id"], station_ids=station_ids)                                        
+    for this_station in sensitive_info:
+      if this_station["stationId"] in devices:
+        devices[this_station["stationId"]]["macAddress"] = this_station.get("macAddress",{})
+
+    if system_metrics.get("stationMetrics"):
+      for this_station in system_metrics.get("stationMetrics"):
+        if this_station["station"]["id"] in devices:
+          devices[this_station["station"]["id"]]["traffic"] = this_station.get("traffic",{})
+
+    systems[this_system["id"]]["devices"] = devices
+
+  return systems
