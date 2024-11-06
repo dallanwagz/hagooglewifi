@@ -3,8 +3,8 @@ import time
 
 from homeassistant.components.light import (
     ATTR_BRIGHTNESS,
-    SUPPORT_BRIGHTNESS,
     LightEntity,
+    ColorMode
 )
 from homeassistant.const import ATTR_NAME
 
@@ -76,6 +76,7 @@ class GoogleWifiLight(GoogleWifiEntity, LightEntity):
         self._state = None
         self._brightness = None
         self._last_change = 0
+        self._attr_color_mode = ColorMode.BRIGHTNESS
 
     @property
     def is_on(self):
@@ -123,10 +124,10 @@ class GoogleWifiLight(GoogleWifiEntity, LightEntity):
         return self._brightness
 
     @property
-    def supported_features(self):
+    def supported_color_modes(self):
         """Return the supported features - only brightness."""
 
-        return SUPPORT_BRIGHTNESS
+        return frozenset({ColorMode.BRIGHTNESS})
 
     @property
     def device_info(self):
