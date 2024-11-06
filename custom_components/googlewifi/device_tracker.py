@@ -21,6 +21,9 @@ from .const import (
     SIGNAL_ADD_DEVICE,
 )
 
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up the device tracker platforms."""
@@ -30,6 +33,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     for system_id, system in coordinator.data.items():
         for dev_id, device in system["devices"].items():
+            #REMOVE ME - what attributes do we have here?
+            _LOGGER.debug(f"device keys...{device.keys()}")
             device_name = f"{device['friendlyName']}"
 
             if device.get("friendlyType"):
