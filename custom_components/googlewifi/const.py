@@ -2,7 +2,7 @@
 
 from homeassistant.const import (
     ATTR_NAME,
-    UnitOfDataRate,
+    UnitOfDataRate,    
 )
 
 DOMAIN = "googlewifi"
@@ -14,7 +14,9 @@ ATTR_MODEL = "model"
 ATTR_SW_VERSION = "sw_version"
 ATTR_CONNECTIONS = "connections"
 POLLING_INTERVAL = 30
+USERNAME = "username"
 REFRESH_TOKEN = "refresh_token"
+ANDROID_ID = "android_id"
 DEV_MANUFACTURER = "Google"
 DEV_CLIENT_MODEL = "Connected Client"
 DEFAULT_ICON = "mdi:wifi"

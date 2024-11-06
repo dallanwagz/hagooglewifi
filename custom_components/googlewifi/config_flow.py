@@ -2,11 +2,11 @@
 import logging
 
 import voluptuous as vol
-from googlewifi import GoogleWifi
+from .googlewifiapi import GoogleWifi
 from homeassistant import config_entries
 from homeassistant.const import (
     CONF_SCAN_INTERVAL,
-    UnitOfDataRate
+    UnitOfDataRate,
 )
 from homeassistant.core import callback
 from homeassistant.helpers import aiohttp_client, config_entry_flow
@@ -21,6 +21,8 @@ from .const import (
     DOMAIN,
     POLLING_INTERVAL,
     REFRESH_TOKEN,
+    USERNAME,
+    ANDROID_ID,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -29,7 +31,7 @@ _LOGGER = logging.getLogger(__name__)
 class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for GoogleWifi."""
 
-    VERSION = 1
+    VERSION = 2
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
     @staticmethod
@@ -50,7 +52,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             session = aiohttp_client.async_get_clientsession(self.hass)
 
             token = user_input[REFRESH_TOKEN]
-            api_client = GoogleWifi(token, session)
+            username = user_input[USERNAME]
+            android_id = user_input[ANDROID_ID]
+            api_client = GoogleWifi(self.hass, username, token, android_id, session)
 
             try:
                 await api_client.connect()
@@ -70,7 +74,9 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
+                    vol.Required(USERNAME): str,
                     vol.Required(REFRESH_TOKEN): str,
+                    vol.Required(ANDROID_ID): str,
                     vol.Required(ADD_DISABLED, default=True): bool,
                 }
             ),
