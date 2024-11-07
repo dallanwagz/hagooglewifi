@@ -188,11 +188,11 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
             
             if system_data is None:
                 raise ConfigEntryNotReady("Google Wifi has returned no system")
-            
-            current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"{current_time}.txt"
-            with open(filename, "w") as file:
-                file.write(str(system_data))
+            if system_data:
+                current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                filename = f"{current_time}.txt"
+                with open(filename, "w") as file:
+                    file.write(str(system_data))
 
             for system_id, system in system_data.items():
                 connected_count = 0
