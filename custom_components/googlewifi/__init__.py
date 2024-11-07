@@ -192,7 +192,7 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
             current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"{current_time}.txt"
             with open(filename, "w") as file:
-                file.write(system_data)
+                file.write(str(system_data))
 
             for system_id, system in system_data.items():
                 connected_count = 0
