@@ -190,7 +190,7 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
                 raise ConfigEntryNotReady("Google Wifi has returned no system")
             if system_data:
                 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-                filename = f"{current_time}.txt"
+                filename = f"dump/{current_time}.txt"
                 with open(filename, "w") as file:
                     file.write(str(system_data))
 
