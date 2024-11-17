@@ -118,8 +118,6 @@ class GoogleWifiSwitch(GoogleWifiEntity, SwitchEntity):
             icon=icon,
             system_id=system_id,
             item_id=item_id,
-            ip_address=ip_address,
-            mac_address=mac_address,
         )
 
         self._state = None
@@ -127,6 +125,8 @@ class GoogleWifiSwitch(GoogleWifiEntity, SwitchEntity):
         self._last_change = 0
         self._mac = None
         self._unit_of_measurement = data_unit
+        self.ip_address = ip_address
+        self.mac_address = mac_address
 
     @property
     def is_on(self):
