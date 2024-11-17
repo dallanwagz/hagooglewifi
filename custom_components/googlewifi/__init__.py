@@ -198,7 +198,7 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
                 if not os.path.isdir(directory):
                   os.mkdir(directory)
                 with open(file_path, "w") as file:
-                    file.write(json.dumps(system_data))
+                    file.write(json.dumps(system_data['AAAAABxSlq8']))
 
             for system_id, system in system_data.items():
                 connected_count = 0
