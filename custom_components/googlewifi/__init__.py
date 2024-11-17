@@ -2,6 +2,7 @@
 import asyncio
 import logging
 import time
+import os.path
 from datetime import timedelta
 from datetime import datetime
 
@@ -190,8 +191,12 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
                 raise ConfigEntryNotReady("Google Wifi has returned no system")
             if system_data:
                 current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-                filename = f"dump/{current_time}.txt"
-                with open(filename, "w") as file:
+                directory = './custom_components/googlewifi/dumps/'
+                filename = f"{current_time}.txt"
+                file_path = os.path.join(directory, filename)
+                if not os.path.isdir(directory):
+                  os.mkdir(directory)
+                with open(file_path, "w") as file:
                     file.write(str(system_data))
 
             for system_id, system in system_data.items():
