@@ -215,8 +215,6 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
 
                     if device_id not in self.devicelist:
                         to_add = {
-                            "ip_address": device_network,
-                            "mac_address": mac_address,
                             "system_id": system_id,
                             "device_id": device_id,
                             "device": device,
