@@ -3,6 +3,7 @@ import asyncio
 import logging
 import time
 import os.path
+import json
 from datetime import timedelta
 from datetime import datetime
 
@@ -197,7 +198,7 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
                 if not os.path.isdir(directory):
                   os.mkdir(directory)
                 with open(file_path, "w") as file:
-                    file.write(str(system_data))
+                    file.write(json.dumps(system_data))
 
             for system_id, system in system_data.items():
                 connected_count = 0
