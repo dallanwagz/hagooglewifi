@@ -210,10 +210,13 @@ class GoogleWiFiUpdater(DataUpdateCoordinator):
 
                 for device_id, device in system["devices"].items():
                     device_network = device.get("ipAddress", " " * 10)
-                    device_network = ".".join(device_network.split(".", 3)[:3])
+                    mac_address = device.get("macAddress", " " * 10)
+                    device_network2 = ".".join(device_network.split(".", 3)[:3])
 
                     if device_id not in self.devicelist:
                         to_add = {
+                            "ip_address": device_network
+                            "mac_address": mac_address,
                             "system_id": system_id,
                             "device_id": device_id,
                             "device": device,
