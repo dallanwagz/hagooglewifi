@@ -56,6 +56,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
                 system_id=system_id,
                 item_id=dev_id,
                 data_unit=data_unit,
+                ip_address=device.get('ipAddress', ''),
+                mac_address=device.get('macAddress', ''),
             )
             entities.append(entity)
 
@@ -79,6 +81,8 @@ async def async_setup_entry(hass, entry, async_add_entities):
             system_id=system_id,
             item_id=device_id,
             data_unit=data_unit,
+            ip_address=device.get('ipAddress', ''),
+            mac_address=device.get('macAddress', ''),
         )
         entities = [entity]
         async_add_entities(entities)
@@ -106,7 +110,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class GoogleWifiSwitch(GoogleWifiEntity, SwitchEntity):
     """Defines a Google WiFi switch."""
 
-    def __init__(self, coordinator, name, icon, system_id, item_id, data_unit):
+    def __init__(self, coordinator, name, icon, system_id, item_id, data_unit, ip_address, mac_address):
         """Initialize the switch."""
         super().__init__(
             coordinator=coordinator,
@@ -114,6 +118,8 @@ class GoogleWifiSwitch(GoogleWifiEntity, SwitchEntity):
             icon=icon,
             system_id=system_id,
             item_id=item_id,
+            ip_address=ip_address,
+            mac_address=mac_address,
         )
 
         self._state = None
