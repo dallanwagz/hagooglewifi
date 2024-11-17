@@ -242,8 +242,8 @@ class GoogleWifiSwitch(GoogleWifiEntity, SwitchEntity):
             ATTR_IDENTIFIERS: {(DOMAIN, self._item_id)},
             ATTR_CONNECTIONS: mac,
             ATTR_NAME: self._name,
-            ATTR_MANUFACTURER: "Google",
-            ATTR_MODEL: DEV_CLIENT_MODEL,
+            ATTR_MANUFACTURER: self.ip_address,
+            ATTR_MODEL: self.mac_address,
             "via_device": (DOMAIN, self._system_id),
         }
 
